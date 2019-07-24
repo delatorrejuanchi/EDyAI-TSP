@@ -78,10 +78,6 @@ void datostsp_destruir(DatosTSP* datos);
 int* resolver_tsp(DatosTSP* datos);
 
 void recursion(int* A, int N, int* solucion, int* camino, int costo, int i);
-void recursion_izq(int* A, int N, int* solucion, int* camino, int costo, int i,
-                   int f);
-void recursion_der(int* A, int N, int* solucion, int* camino, int costo, int i,
-                   int f);
 
 // escribir_solucion: (char const*) DatosTSP* int* -> void
 // Recibe el nombre de un archivo de salida, un puntero a una estructura

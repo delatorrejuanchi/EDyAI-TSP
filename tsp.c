@@ -154,125 +154,42 @@ void recursion(int* A, int N, int* solucion, int* camino, int costo, int i) {
     int* costosInicio = A + N * camino[i - 1];
     int* costosFinal = A + N * camino[N - i + 1];
 
-    int gradoInicio = 0, gradoFinal = 0;
-    for (int j = i; j < N - i + 1; j++) {
-      if (costosInicio[camino[j]]) gradoInicio++;
-      if (costosFinal[camino[j]]) gradoFinal++;
-    }
-
-    if (gradoFinal == N - 2 * i + 1) {
-      recursion_izq(A, N, solucion, camino, costo, i, N - i);
-    } else if (gradoInicio == N - 2 * i + 1) {
-      recursion_der(A, N, solucion, camino, costo, N - i, i);
-    } else {
-      int cotaSuperior = solucion[N] - costo;
-      int temp1 = camino[i];
-
-      for (int j = i; j < N - i + 1; j++) {
-        int costo1 = costosInicio[camino[j]];
-
-        if (costo1 && costo1 < cotaSuperior) {
-          camino[i] = camino[j];
-          camino[j] = temp1;
-
-          int temp2 = camino[N - i];
-
-          for (int k = i + 1; k < N - i; k++) {
-            int costo2 = costosFinal[camino[k]];
-
-            if (costo2 && costo1 + costo2 < cotaSuperior) {
-              camino[N - i] = camino[k];
-              camino[k] = temp2;
-
-              recursion(A, N, solucion, camino, costo + costo1 + costo2, i + 1);
-
-              camino[k] = camino[N - i];
-            }
-          }
-
-          camino[N - i] = temp2;
-          int costo2 = costosFinal[temp2];
-          if (costo2 && costo1 + costo2 < cotaSuperior) {
-            recursion(A, N, solucion, camino, costo + costo1 + costo2, i + 1);
-          }
-
-          camino[j] = camino[i];
-        }
-      }
-
-      camino[i] = temp1;
-    }
-  }
-}
-
-void recursion_izq(int* A, int N, int* solucion, int* camino, int costo, int i,
-                   int f) {
-  if (i == f) {
-    int costo1 = A[N * camino[i - 1] + camino[i]];
-    int costo2 = A[N * camino[i] + camino[i + 1]];
-    int costoTotal = costo + costo1 + costo2;
-
-    if (costo1 && costo2 && costoTotal < solucion[N]) {
-      memcpy(solucion, camino, sizeof(int) * N);
-      solucion[N] = costoTotal;
-    }
-  } else {
     int cotaSuperior = solucion[N] - costo;
-    int* costosInicio = A + N * camino[i - 1];
-    int temp = camino[i];
+    int temp1 = camino[i];
 
-    for (int j = i; j < f + 1; j++) {
+    for (int j = i; j < N - i + 1; j++) {
       int costo1 = costosInicio[camino[j]];
 
       if (costo1 && costo1 < cotaSuperior) {
         camino[i] = camino[j];
-        camino[j] = temp;
+        camino[j] = temp1;
 
-        recursion_izq(A, N, solucion, camino, costo + costo1, i + 1, f);
+        int temp2 = camino[N - i];
 
-        camino[j] = camino[i];
-      }
-    }
+        for (int k = i + 1; k < N - i; k++) {
+          int costo2 = costosFinal[camino[k]];
 
-    camino[i] = temp;
-  }
-}
+          if (costo2 && costo1 + costo2 < cotaSuperior) {
+            camino[N - i] = camino[k];
+            camino[k] = temp2;
 
-void recursion_der(int* A, int N, int* solucion, int* camino, int costo, int i,
-                   int f) {
-  if (i == f) {
-    int costo1 = A[N * camino[i - 1] + camino[i]];
-    int costo2 = A[N * camino[i] + camino[i + 1]];
-    int costoTotal = costo + costo1 + costo2;
+            recursion(A, N, solucion, camino, costo + costo1 + costo2, i + 1);
 
-    if (costo1 && costo2 && costoTotal < solucion[N]) {
-      memcpy(solucion, camino, sizeof(int) * N);
-      solucion[N] = costoTotal;
-    }
-  } else {
-    int cotaSuperior = solucion[N] - costo;
-    int* costosFinal = A + N * camino[i + 1];
-    int temp = camino[i];
+            camino[k] = camino[N - i];
+          }
+        }
 
-    for (int j = f; j < i; j++) {
-      int costo1 = costosFinal[camino[j]];
-
-      if (costo1 && costo1 < cotaSuperior) {
-        camino[i] = camino[j];
-        camino[j] = temp;
-
-        recursion_der(A, N, solucion, camino, costo + costo1, i - 1, f);
+        camino[N - i] = temp2;
+        int costo2 = costosFinal[temp2];
+        if (costo2 && costo1 + costo2 < cotaSuperior) {
+          recursion(A, N, solucion, camino, costo + costo1 + costo2, i + 1);
+        }
 
         camino[j] = camino[i];
       }
     }
 
-    camino[i] = temp;
-
-    int costo1 = costosFinal[temp];
-    if (costo1 && costo1 < cotaSuperior) {
-      recursion_der(A, N, solucion, camino, costo + costo1, i - 1, f);
-    }
+    camino[i] = temp1;
   }
 }
 

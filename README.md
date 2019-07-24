@@ -1,7 +1,9 @@
 # EDyAI - Trabajo Práctico Final (24/07/2019)
 ## Juan Cruz de La Torre
 
-### Introducción (TODO)
+### Introducción
+
+El objetivo del trabajo práctico consiste en proponer una estructura de datos y un algoritmo que permita encontrar una solución al **TSP** _(Traveling Salesman Problem)_.
 
 ### Modo de uso
 
@@ -17,11 +19,11 @@ El archivo de entrada debe tener el siguiente formato:
 - La tercer línea contiene el encabezado `"Costos"`
 - El resto de las líneas tienen el costo de ir de la ciudad i-ésima a la ciudad j-ésima de la siguiente manera: `"ciudad_i,ciudad_j,X"`, en donde ciudad_i y ciudad_j son los nombres de ambas ciudades y X es un entero que representa el costo de ir de la ciudad i-ésima a la j-ésima.
 
-(*) Los nombres de las ciudades deben ser tener menos de 50 caracteres.
+(*) Los nombres de las ciudades deben tener menos de 50 caracteres.
 
 Por ejemplo, la entrada asociada al siguiente TSP:
 
-![Ejemplo TSP 1](img/ejemplo_1.png)
+![Ejemplo 1](img/ejemplo_1.png)
 
 Sería:
 
@@ -126,4 +128,23 @@ Para TSP dados por un grafo completo, la cantidad de caminos posibles se reduce 
 
 Sin embargo, aquí hay una oportunidad de mejorar el algoritmo enormemente. Si en vez de elegir como ciudad inicial a cualquier ciudad, elegimos aquella para la cual el entero `k` es mínimo, estaremos reduciendo el problema muchísimo. Por ejemplo, en el mejor de los casos, `k = 2` y resulta que la cantidad de permutaciones de caminos posibles es `(N-3)!`, mucho menor a `(N - 1)!/2` para `N` grandes.
 
-#### resolver_tsp_2 (TODO)
+#### resolver_tsp (versión final)
+
+El siguiente paso en el desarrollo del algoritmo, fue fruto de la respuesta a una pregunta que ilustro con el siguiente ejemplo.
+
+Supongamos que tenemos el siguiente TSP:
+
+![Ejemplo 2](img/ejemplo_2.png)
+
+Siguiendo el razonamiento desarrollado previamente, elegimos `a` como la ciudad inicial y marcamos `b` y `f` como la siguiente y última ciudad del recorrido respectivamente. En este punto, `resolver_tsp_2` procede a realizar recursivamente las permutaciones posibles de las ciudades `c`, `d` y `e`.
+
+Sin embargo, de las 6 permutaciones posibles, solo 2 van a ser válidas ya que la única opción para la penúltima ciudad es `d` ya que `f` no está conectada con `c` ni `e`.
+
+A diferencia de las versiones anteriores, `resolver_tsp` busca generar las permutaciones recursivamente pero no sólo de izquierda a derecha, sino que fijando ambos extremos de cada subproblema.
+
+Para TSP con `N` grande pero en los que aparecen situaciones similares, las mejoras respecto a la versión anterior son enormes. Por ejemplo, para el TSP en `ejemplo_20.txt` de 20 ciudades ilustrado (como se pudo) por:
+
+![Ejemplo 3](img/ejemplo_3.png)
+
+La version `resolver_tsp_1` encuentra la solución en aproximadamente `3.65s` mientras que `resolver_tsp` encuentra la solución en `0.09s`. En casos similares, la mejora también es importante.
+
