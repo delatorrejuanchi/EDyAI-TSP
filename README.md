@@ -1,7 +1,7 @@
 # EDyAI - Trabajo Práctico Final (24/07/2019)
 ## Juan Cruz de La Torre
 
-### Introducción
+### Introducción (TODO)
 
 ### Modo de uso
 
@@ -90,27 +90,29 @@ Esta estructura almacena los siguientes datos:
 
 (*) Asociamos a cada ciudad un índice, de acuerdo a la posición en la que se encuentra en esta lista.
 
-(**) La matriz de costos asociada al problema es una matriz, A, cuya entrada en la fila i y la columna j es `A[i][j]` y representa:
+(**) La matriz de costos asociada al problema es una matriz, `A`, cuya entrada en la fila i y la columna j es `A[i][j]` y representa:
   - Si `A[i][j] = 0`, la ciudad i-ésima y la ciudad j-ésima no se encuentran unidas directamente.
   - Si `A[i][j] != 0`, entonces `A[i][j]` representa el costo de ir de la ciudad i-ésima a la ciudad j-ésima.
 
-Dado que estamos resolviendo un Traveling Salesman Problem simétrico, en el que el costo de ir de la ciudad i-ésima a la j-ésima es equivalente al de ir de la ciudad j-ésima a la i-ésima, resulta evidente que la matriz de costos asociada al problema es una matriz simétrica.
+Dado que estamos resolviendo un TSP simétrico, en el que el costo de ir de la ciudad i-ésima a la j-ésima es equivalente al de ir de la ciudad j-ésima a la i-ésima, resulta evidente que la matriz de costos asociada al problema es una matriz simétrica.
 
-Representamos esta matriz de costos mediante un arreglo de enteros tamaño N*N, y por eso accedemos a la entrada en la fila i y columna j mediante `A[N * i + j]`.
+Representamos esta matriz de costos mediante un arreglo de enteros tamaño `N*N`, y por eso accedemos a la entrada en la fila i y columna j mediante `A[N * i + j]`.
 
 Alternativamente, podríamos haber decidido utilizar una matriz triangular para representar la matriz de costos y utilizar menos memoria. Sin embargo, para los `N` que estamos trabajando no vale la pena e implicaría una mayor complejidad en algunos cálculos.
 
 ### Algoritmo
 
-Para resolver un TSP, el algoritmo busca generar recursivamente todas las permutaciones de los posibles caminos y así elegir la de menor costo. Es importante mencionar que cuando es evidente que siguiendo un dado camino es imposible superar la mejor solución encontrada hasta el momento, el algoritmo lo descarta.
+Para resolver un TSP, el algoritmo busca generar recursivamente todas las permutaciones de los posibles caminos y así elegir la de menor costo. Es importante mencionar que cuando es evidente que siguiendo un dado camino es imposible superar la mejor solución encontrada hasta el momento, el algoritmo lo descarta y así se reduce enormemente la cantidad de llamadas recursivas.
 
-A lo largo del desarrollo del Trabajo Práctico, la idea general del algoritmo se mantuvo constante y es la previamente mencionada. Sin embargo, hubieron varias etapas que creo que valen la pena resaltar para explicar el funcionamiento del algoritmo.
+A lo largo del desarrollo del Trabajo Práctico, la idea general del algoritmo se mantuvo constante y es la previamente mencionada. Sin embargo, hubieron varias etapas que creo que valen la pena resaltar para explicar el funcionamiento del algoritmo entregado.
 
 #### resolver_tsp_0
 
-La primera implementación del algoritmo fue muy simple. Como es evidente que es irrelevante donde comenzamos el recorrido a la hora de encontrar una solución, marcamos una como la primera y generamos recursivamente (y de izquierda a derecha) todas las permutaciones de los caminos válidos que comienzan en dicha ciudad y terminan en la misma.
+La primera implementación del algoritmo fue muy simple. Como es evidente que no importa donde comenzamos el recorrido a la hora de encontrar una solución, simplemente marcamos una ciudad como la primera y generamos recursivamente (y de izquierda a derecha) todas las permutaciones de los caminos válidos que comienzan en dicha ciudad y terminan en la misma.
 
-Para TSP dados por un grafo completo, la cantidad de permutaciones posibles es de `(N-1)!`.
+Para TSP dados por un grafo completo, es decir que todas las ciudades están conectadas entre sí, la cantidad de caminos posibles que comienzan con dicha ciudad es de `(N-1)!`. Esto quiere decir que la complejidad del problema crece muy rápidamente a medida que aumenta `N`.
+
+Gracias a que el algoritmo no recorre recursivamente aquellos caminos en los que sabe de antemano que no van a superar la mejor solución encontrada hasta el momento, al final no se terminan recorriendo `(N-1)!` caminos sino una cantidad mucho menor. Sin embargo, considerar el peor caso (en el que no se logran descartar caminos) brinda información de importancia sobre el algoritmo.
 
 #### resolver_tsp_1
 
@@ -120,7 +122,7 @@ Fijando una ciudad como la inicial, digamos que esta ciudad está conectada con 
 
 Esto es, podemos dividir el problema de hallar la solución al TSP comenzando por dicha ciudad en `k(k-1)/2` subproblemas de `N - 3` ciudades, cada uno consistente en hallar la solución al TSP comenzando en una ciudad inicial, y fijando una segunda y última ciudad.
 
-Para TSP dados por un grafo completo, la cantidad de permutaciones posibles se reduce a `(N-1)(N-2)/2 * (N - 3)! = (N - 1)!/2`.
+Para TSP dados por un grafo completo, la cantidad de caminos posibles se reduce a `(N-1)(N-2)/2 * (N - 3)! = (N - 1)!/2`.
 
 Sin embargo, aquí hay una oportunidad de mejorar el algoritmo enormemente. Si en vez de elegir como ciudad inicial a cualquier ciudad, elegimos aquella para la cual el entero `k` es mínimo, estaremos reduciendo el problema muchísimo. Por ejemplo, en el mejor de los casos, `k = 2` y resulta que la cantidad de permutaciones de caminos posibles es `(N-3)!`, mucho menor a `(N - 1)!/2` para `N` grandes.
 
