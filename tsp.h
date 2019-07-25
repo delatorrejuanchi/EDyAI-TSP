@@ -77,6 +77,15 @@ void datostsp_destruir(DatosTSP* datos);
 // Resuelve el Traveling Salesman Problem asociado y devuelve su solución.
 int* resolver_tsp(DatosTSP* datos);
 
+// recursion: int* int int* int* int int -> void
+// Recibe la matriz de costos asociada al problema, la cantidad de ciudades, la
+// mejor solución hayada hasta el momento, el camino actual, el costo del camino
+// actual, y un indicador del nivel actual.
+// Busca generar recursivamente todas las permutaciones de caminos válidos
+// posibles, y si alguna tiene un costo menor al mejor encontrado, actualiza la
+// mejor solución encontrada. No genera las permutaciones de izquierda a
+// derecha, sino que fija las ciudades en las posiciones i y N - i para cada
+// llamada recursiva. Para más información, consulte README.pdf.
 void recursion(int* A, int N, int* solucion, int* camino, int costo, int i);
 
 // escribir_solucion: (char const*) DatosTSP* int* -> void

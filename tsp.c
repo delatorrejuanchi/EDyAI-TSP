@@ -135,11 +135,13 @@ int* resolver_tsp(DatosTSP* datos) {
 }
 
 void recursion(int* A, int N, int* solucion, int* camino, int costo, int i) {
-  if (i == (N + 1) / 2) {
+  if (i == (N + 1) / 2) {  // Caso final: ya generamos la permutación
+    // Caso 1: falta añadir el costo de 1 lado
     int costo1 = A[N * camino[i - 1] + camino[i]];
     int costoTotal = costo + costo1;
     int valido = costo1;
 
+    // Caso 2: falta añadir el costo de 2 lados (el anterior y el que sigue)
     if (i == N / 2) {
       int costo2 = A[N * camino[i] + camino[N - i + 1]];
       costoTotal += costo2;

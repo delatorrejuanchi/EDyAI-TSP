@@ -140,7 +140,7 @@ Siguiendo el razonamiento desarrollado previamente, elegimos `a` como la ciudad 
 
 Sin embargo, de las 6 permutaciones posibles, solo 2 van a ser válidas ya que la única opción para la penúltima ciudad es `d` ya que `f` no está conectada con `c` ni `e`.
 
-A diferencia de las versiones anteriores, `resolver_tsp` busca generar las permutaciones recursivamente pero no sólo de izquierda a derecha, sino que fijando ambos extremos de cada subproblema.
+A diferencia de las versiones anteriores, `resolver_tsp` busca generar las permutaciones recursivamente pero no sólo de izquierda a derecha, sino que fijando ambos extremos de cada subproblema. Como `d` es la única ciudad que puede estar penúltima, podemos fijar esta y permutar las restantes.
 
 Para TSP con `N` grande pero en los que aparecen situaciones similares, las mejoras respecto a la versión anterior son enormes. Por ejemplo, para el TSP en `ejemplo_20.txt` de 20 ciudades ilustrado (como se pudo) por:
 
@@ -148,3 +148,4 @@ Para TSP con `N` grande pero en los que aparecen situaciones similares, las mejo
 
 La version `resolver_tsp_1` encuentra la solución en aproximadamente `3.65s` mientras que `resolver_tsp` encuentra la solución en `0.09s`. En casos similares, la mejora también es importante.
 
+A lo largo del desarrollo del trabajo, también experimenté con algunas heurísticas como `nearest_neighbors` para generar rápidamente una cota para los posibles caminos antes de llamar a `resolver_tsp`, pero decidí no incluirlas en la entrega porque las mejores eran insignificantes y muy poco consistentes.
